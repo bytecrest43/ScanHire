@@ -1,9 +1,12 @@
 import type { Route } from "./+types/home";
 import Navbar from "~/components/Navbar";
 import ResumeCard from "~/components/ResumeCard";
+import BannerAd from "~/components/BannerAd";
+import ResponsiveAd from "~/components/ResponsiveAd";
 import {usePuterStore} from "~/lib/puter";
 import {Link, useNavigate} from "react-router";
 import {useEffect, useState} from "react";
+import { ADSENSE_PUBLISHER_ID, AD_UNITS } from "../../constants/ads";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -41,6 +44,12 @@ export default function Home() {
 
   return <main className="bg-[url('/images/bg-main.svg')] bg-cover">
     <Navbar />
+    
+    {/* Banner ad below navbar */}
+    <BannerAd 
+      client={ADSENSE_PUBLISHER_ID}
+      slot={AD_UNITS.BANNER.HOME}
+    />
 
     <section className="main-section">
       <div className="page-heading py-16">
@@ -72,6 +81,20 @@ export default function Home() {
             </Link>
           </div>
       )}
+      
+      <div className="flex flex-col items-center justify-center mt-10 gap-4">
+        <Link to="/wipe" className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition w-fit text-xl">
+          Delete All Data
+        </Link>
+      </div>
     </section>
+    
+    {/* Responsive ad at the bottom of the page */}
+    <div className="mx-auto max-w-[1200px] px-4 pb-8">
+      <ResponsiveAd 
+        client={ADSENSE_PUBLISHER_ID}
+        slot={AD_UNITS.RESPONSIVE.HOME}
+      />
+    </div>
   </main>
 }

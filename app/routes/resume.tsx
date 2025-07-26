@@ -5,6 +5,8 @@ import {usePuterStore} from "~/lib/puter";
 import Summary from "~/components/Summary";
 import ATS from "~/components/ATS";
 import Details from "~/components/Details";
+import InContentAd from "~/components/InContentAd";
+import { ADSENSE_PUBLISHER_ID, AD_UNITS } from "../../constants/ads";
 
 export const meta = () => ([
     { title: 'ScanHire | Review ' },
@@ -78,6 +80,13 @@ const Resume = () => {
                         <div className="flex flex-col gap-8 animate-in fade-in duration-1000">
                             <Summary feedback={feedback} />
                             <ATS score={feedback.ATS.score || 0} suggestions={feedback.ATS.tips || []} />
+                            
+                            {/* In-content ad between ATS and Details sections */}
+                            <InContentAd 
+                              client={ADSENSE_PUBLISHER_ID}
+                              slot={AD_UNITS.IN_CONTENT.RESUME}
+                            />
+                            
                             <Details feedback={feedback} />
                         </div>
                     ) : (

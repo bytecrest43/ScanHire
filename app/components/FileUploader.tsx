@@ -4,9 +4,10 @@ import { formatSize } from '../lib/utils'
 
 interface FileUploaderProps {
     onFileSelect?: (file: File | null) => void;
+    acceptImages?: boolean;
 }
 
-const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
+const FileUploader = ({ onFileSelect, acceptImages = false }: FileUploaderProps) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0] || null;
 
@@ -18,7 +19,9 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
     const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({
         onDrop,
         multiple: false,
-        accept: { 'application/pdf': ['.pdf']},
+        accept: acceptImages 
+            ? { 'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'] }
+            : { 'application/pdf': ['.pdf']},
         maxSize: maxFileSize,
     })
 
@@ -61,7 +64,11 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
                                     Click to upload
                                 </span> or drag and drop
                             </p>
-                            <p className="text-lg text-gray-500">PDF (max {formatSize(maxFileSize)})</p>
+                            <p className="text-lg text-gray-500">
+                                {acceptImages 
+                                    ? `Images (JPEG, PNG, GIF, WebP) (max ${formatSize(maxFileSize)})` 
+                                    : `PDF (max ${formatSize(maxFileSize)})`}
+                            </p>
                         </div>
                     )}
                 </div>

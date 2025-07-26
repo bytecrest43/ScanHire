@@ -12,6 +12,9 @@ import "./app.css";
 import { useEffect } from "react";
 import { usePuterStore } from "./lib/puter";
 
+
+const ADSENSE_PUBLISHER_ID = import.meta.env.VITE_ADSENSE_PRODUCTION_PUBLISHER_ID;
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -26,27 +29,42 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-
-   const { init } = usePuterStore();
+  const { init } = usePuterStore();
 
   useEffect(() => {
-    init()
+    init();
   }, [init]);
+
   return (
-    <html lang="en">
+      <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* Google AdSense Script */}
+        <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
+            crossOrigin="anonymous"
+        ></script>
+        <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              (window.adsbygoogle = window.adsbygoogle || []);
+            `,
+            }}
+        ></script>
+
         <Meta />
         <Links />
       </head>
       <body>
-        <script src="https://js.puter.com/v2/"></script>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+      <script src="https://js.puter.com/v2/"></script>
+      {children}
+      <ScrollRestoration />
+      <Scripts />
       </body>
-    </html>
+      </html>
   );
 }
 
@@ -62,23 +80,23 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+        error.status === 404
+            ? "The requested page could not be found."
+            : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+      <main className="pt-16 p-4 container mx-auto">
+        <h1>{message}</h1>
+        <p>{details}</p>
+        {stack && (
+            <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
         </pre>
-      )}
-    </main>
+        )}
+      </main>
   );
 }
